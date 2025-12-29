@@ -14,7 +14,7 @@ const playlists = {
   Kotlin: "https://www.youtube.com/watch?v=KJh3sjdfe45"
 };
 
-function PlaylistSuggestions({ language }) {
+function VideoSuggestions({ language }) {
   const playlistUrl = playlists[language]; // Get playlist URL based on selected language
 
   return (
