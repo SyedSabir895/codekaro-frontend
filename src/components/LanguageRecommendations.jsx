@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import PlaylistSuggestions from "./PlaylistSuggestions";
 import { CheckCircle } from "lucide-react";
 import Compiler from "./Compiler"; // Import Compiler component
+import VideoSuggestions from "./VideoSuggestions";
 
 const recommendations = {
   beginner: ["Python", "JavaScript", "HTML"],
@@ -121,7 +121,7 @@ function LanguageRecommendations({ skillLevel }) {
           </button>
 
           {/* Playlist Suggestions appear above Features and Benefits */}
-          {selectedLanguage && <PlaylistSuggestions language={selectedLanguage} />}
+          {selectedLanguage && <VideoSuggestions language={selectedLanguage} />}
 
           {/* Features and Benefits at the last */}
           {selectedLanguage && renderLanguageInfo(selectedLanguage)}

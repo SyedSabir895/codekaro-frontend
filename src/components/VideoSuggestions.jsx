@@ -39,4 +39,4 @@ function PlaylistSuggestions({ language }) {
   );
 }
 
-export default PlaylistSuggestions;
+export default VideoSuggestions
