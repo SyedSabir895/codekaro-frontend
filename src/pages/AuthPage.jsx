@@ -33,7 +33,7 @@ const AuthPage = () => {
     setError("");
 
     try {
-      const url = `http://localhost:5000/api/auth/${
+      const url = `https://codekaro-backend-6yb4.onrender.com/api/auth/${
         isRegister ? "register" : "login"
       }`;
       const { fullName, email, password } = formData;
@@ -65,7 +65,7 @@ const AuthPage = () => {
       setUserName(user.displayName);
 
       // OPTIONAL: send user info to backend
-      await axios.post("http://localhost:5000/api/auth/google", {
+      await axios.post("https://codekaro-backend-6yb4.onrender.com/api/auth/google", {
         fullName: user.displayName,
         email: user.email,
       });
