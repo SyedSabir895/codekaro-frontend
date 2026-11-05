@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Gamepad2, Loader2, CheckCircle2, XCircle, RotateCcw, Trophy } from "lucide-react";
 
-// Flask quiz service (backend/app.py); Express uses port 5000
-const QUIZ_API_URL = import.meta.env.VITE_QUIZ_API_URL || "http://localhost:5001/generate-quiz";
+import api from "../api";
 
 const LETTERS = ["A", "B", "C", "D"];
 
@@ -28,23 +27,14 @@ const Games = () => {
     setSubmitted(false);
 
     try {
-      const response = await fetch(QUIZ_API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ language, level }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || `Request failed with status ${response.status}`);
-      }
+      const { data } = await api.post("/quiz/generate", { language, level });
       if (!data.questions?.length) {
         throw new Error("No questions generated.");
       }
       setQuestions(data.questions);
     } catch (error) {
       console.error("Error generating quiz:", error);
-      setError(`Failed to generate questions: ${error.message}`);
+      setError(`Failed to generate questions: ${error.response?.data?.error || error.message}`);
     }
 
     setLoading(false);
