@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { Flame, Clock, FolderCheck, Award } from "lucide-react";
 
 const DashBoard = () => {
   const [level, setLevel] = useState("intermediate");
@@ -42,130 +43,131 @@ const DashBoard = () => {
 
   const { progress, topics } = levelData[level];
 
+  const stats = [
+    { title: "Learning Streak", value: `${learningStreak} days`, icon: Flame, tone: "text-amber-300 bg-amber-400/10" },
+    { title: "Time Spent", value: formatTimeSpent(hoursSpent), icon: Clock, tone: "text-accent-400 bg-accent-400/10" },
+    { title: "Completed Projects", value: completedProjects, icon: FolderCheck, tone: "text-emerald-300 bg-emerald-400/10" },
+    { title: "Skills Mastered", value: skillsMastered, icon: Award, tone: "text-brand-300 bg-brand-400/10" },
+  ];
+
+  const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+
   return (
-    <div className="min-h-screen text-white p-6">
+    <section className="page">
       {/* Header */}
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-white text-blue-800 font-bold rounded-full flex items-center justify-center text-xl">
-              {userName.charAt(0).toUpperCase()}
-            </div>
-            <div>
-              <h1 className="text-3xl font-semibold">Welcome back, {userName}!</h1>
-              <p className="text-blue-200 text-xl">Continue your learning journey</p>
-            </div>
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-4">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-accent-400 text-2xl font-bold text-white">
+            {userName.charAt(0).toUpperCase()}
           </div>
-          <div className="font-semibold text-3xl">
-            Current Level: {level.charAt(0).toUpperCase() + level.slice(1)}
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white">Welcome back, {userName}!</h1>
+            <p className="muted">Continue your learning journey</p>
           </div>
         </div>
+        <span className="eyebrow self-start sm:self-auto">Current level: {capitalize(level)}</span>
+      </div>
 
-        {/* Stats Section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {[
-            { title: "Learning Streak", value: `${learningStreak} days` },
-            { title: "Time Spent", value: formatTimeSpent(hoursSpent) },
-            { title: "Completed Projects", value: completedProjects },
-            { title: "Skills Mastered", value: skillsMastered },
-          ].map((stat, index) => (
+      {/* Stats Section */}
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {stats.map((stat, index) => {
+          const Icon = stat.icon;
+          return (
             <motion.div
               key={index}
-              className="bg-white p-6 rounded-xl shadow-md text-blue-800"
+              className="card p-5"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.2 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <h3 className="text-lg font-medium">{stat.title}</h3>
-              <div className="text-xl font-bold">{stat.value}</div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Learning Progress Section */}
-        <div className="bg-white p-6 rounded-xl shadow-md mb-8 text-blue-800">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Learning Progress</h2>
-            <div className="flex space-x-4">
-              {["beginner", "intermediate", "advanced"].map((lvl) => (
-                <button
-                  key={lvl}
-                  className={`px-4 py-2 rounded-lg ${level === lvl ? "bg-blue-600 text-white" : "text-blue-600 border"}`}
-                  onClick={() => setLevel(lvl)}
-                >
-                  {lvl.charAt(0).toUpperCase() + lvl.slice(1)}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Animated Main Progress Bar */}
-          <div className="relative bg-gray-200 h-2 mb-4 rounded-full">
-            <motion.div
-              className="bg-blue-600 h-2 rounded-full"
-              initial={{ width: "0%" }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 1.5, ease: "easeOut" }}
-            />
-          </div>
-
-          {/* Animated Topic Progress Bars */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {topics.map((topic, index) => (
-              <div key={index} className="bg-gray-100 p-4 rounded-lg">
-                <div className="flex justify-between mb-2">
-                  <span>{topic.name}</span>
-                  <span>{topic.progress}%</span>
-                </div>
-                <div className="relative bg-gray-300 h-2 rounded-full">
-                  <motion.div
-                    className="bg-blue-600 h-2 rounded-full"
-                    initial={{ width: "0%" }}
-                    animate={{ width: `${topic.progress}%` }}
-                    transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
-                  />
-                </div>
+              <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${stat.tone}`}>
+                <Icon size={20} />
               </div>
+              <h3 className="mt-4 text-sm muted">{stat.title}</h3>
+              <div className="mt-1 text-2xl font-bold text-white">{stat.value}</div>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* Learning Progress Section */}
+      <div className="card mb-6 p-6">
+        <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-white">Learning Progress</h2>
+            <p className="text-sm muted">{progress}% of the {level} track completed</p>
+          </div>
+          <div className="flex rounded-xl border border-white/10 bg-ink-900/70 p-1">
+            {["beginner", "intermediate", "advanced"].map((lvl) => (
+              <button
+                key={lvl}
+                className={`rounded-lg px-3 py-1.5 text-sm font-medium transition cursor-pointer ${
+                  level === lvl ? "bg-brand-500 text-white" : "text-slate-400 hover:text-white"
+                }`}
+                onClick={() => setLevel(lvl)}
+              >
+                {capitalize(lvl)}
+              </button>
             ))}
           </div>
         </div>
 
-        {/* Interests & Recommended Paths Section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {/* Animated Main Progress Bar */}
+        <div className="mb-6 h-2 rounded-full bg-white/10">
           <motion.div
-            className="bg-white p-6 rounded-xl shadow-md text-blue-800"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-          >
-            <h2 className="text-xl font-semibold mb-4">Your Interests</h2>
-            <div className="flex flex-wrap gap-4">
-              {["Web Development", "Mobile Apps", "Machine Learning", "Cloud Computing"].map((tag, index) => (
-                <span key={index} className="px-4 py-2 bg-blue-100 text-blue-600 rounded-full text-sm">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </motion.div>
+            className="h-2 rounded-full bg-gradient-to-r from-brand-500 to-accent-400"
+            initial={{ width: "0%" }}
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+          />
+        </div>
 
-          <motion.div
-            className="bg-white p-6 rounded-xl shadow-md text-blue-800"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.5 }}
-          >
-            <h2 className="text-xl font-semibold mb-4">Recommended Paths</h2>
-            <div className="flex flex-wrap gap-4">
-              {["Frontend Development", "React Development", "AI & ML"].map((tag, index) => (
-                <span key={index} className="px-4 py-2 bg-blue-100 text-blue-600 rounded-full text-sm">
-                  {tag}
-                </span>
-              ))}
+        {/* Animated Topic Progress Bars */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {topics.map((topic, index) => (
+            <div key={index} className="rounded-xl border border-white/10 bg-ink-900/60 p-4">
+              <div className="mb-2 flex justify-between text-sm">
+                <span className="text-slate-200">{topic.name}</span>
+                <span className="font-mono text-slate-400">{topic.progress}%</span>
+              </div>
+              <div className="h-1.5 rounded-full bg-white/10">
+                <motion.div
+                  className="h-1.5 rounded-full bg-brand-400"
+                  initial={{ width: "0%" }}
+                  animate={{ width: `${topic.progress}%` }}
+                  transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
+                />
+              </div>
             </div>
-          </motion.div>
+          ))}
         </div>
       </div>
-    </div>
+
+      {/* Interests & Recommended Paths Section */}
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        {[
+          { title: "Your Interests", tags: ["Web Development", "Mobile Apps", "Machine Learning", "Cloud Computing"] },
+          { title: "Recommended Paths", tags: ["Frontend Development", "React Development", "AI & ML"] },
+        ].map((group, groupIndex) => (
+          <motion.div
+            key={group.title}
+            className="card p-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 + groupIndex * 0.2 }}
+          >
+            <h2 className="mb-4 text-lg font-semibold text-white">{group.title}</h2>
+            <div className="flex flex-wrap gap-2">
+              {group.tags.map((tag, index) => (
+                <span key={index} className="chip px-3.5 py-1.5 text-sm">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </section>
   );
 };
 

@@ -2,11 +2,14 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
+// Web app config (public values; access is controlled in the Firebase console)
 const firebaseConfig = {
-  apiKey: "AIzaSyAEUcIODQohmdrpOO2VYOkmLSDJ7IMlh0w",
-  authDomain: "shnoor.firebaseapp.com",
-  projectId: "shnoor",
-  appId: "1:346493616706:web:3afc2f04cf06fce64fa3db",
+  apiKey: "AIzaSyCWuyDlFwqJBCDthm-uoM09LdIH64b08HY",
+  authDomain: "codekaro-de93d.firebaseapp.com",
+  projectId: "codekaro-de93d",
+  storageBucket: "codekaro-de93d.firebasestorage.app",
+  messagingSenderId: "934361899428",
+  appId: "1:934361899428:web:c8d7950648696953dde131",
 };
 
 const app = initializeApp(firebaseConfig);

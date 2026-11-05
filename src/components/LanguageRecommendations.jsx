@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle2, Circle, Code2, Sparkles, Trophy } from "lucide-react";
 import Compiler from "./Compiler"; // Import Compiler component
 import VideoSuggestions from "./VideoSuggestions";
 
@@ -58,42 +58,64 @@ function LanguageRecommendations({ skillLevel }) {
 
   const renderLanguageList = () => {
     const languages = recommendations[skillLevel] || [];
-    return languages.map((lang) => (
-      <li
-        key={lang}
-        className="flex items-center space-x-2 bg-gray-100 p-2 rounded-lg shadow-sm cursor-pointer"
-        onClick={() => handleLanguageSelect(lang)}
-      >
-        <CheckCircle className="text-green-500" />
-        <span className="font-semibold">{lang}</span>
-      </li>
-    ));
+    return languages.map((lang) => {
+      const isSelected = selectedLanguage === lang;
+      return (
+        <li key={lang}>
+          <button
+            className={`flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition cursor-pointer ${
+              isSelected
+                ? "border-brand-400/60 bg-brand-500/15 text-white"
+                : "border-white/10 bg-white/[0.03] text-slate-300 hover:border-white/20 hover:bg-white/[0.06]"
+            }`}
+            onClick={() => handleLanguageSelect(lang)}
+          >
+            {isSelected ? (
+              <CheckCircle2 size={20} className="text-brand-300" />
+            ) : (
+              <Circle size={20} className="text-slate-600" />
+            )}
+            <span className="font-semibold">{lang}</span>
+          </button>
+        </li>
+      );
+    });
   };
 
   const renderLanguageInfo = (language) => {
     if (!language) return null;
     const { features, benefits } = featuresAndBenefits[language] || {};
     return (
-      <div className="mb-8 bg-gradient-to-r from-indigo-100 to-indigo-50 p-8 rounded-xl shadow-xl w-full max-w-3xl">
-        <h3 className="text-2xl font-semibold text-indigo-700 mb-6 text-center">
-          Features and Benefits of Learning {language}
+      <div className="card w-full p-6 sm:p-8 text-left">
+        <h3 className="text-xl font-bold text-white">
+          Why learn <span className="gradient-text">{language}</span>?
         </h3>
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <h4 className="font-semibold text-xl text-indigo-600">Features:</h4>
-            <div className="pl-5 text-gray-800 space-y-2">
+        <div className="mt-6 grid gap-6 sm:grid-cols-2">
+          <div>
+            <h4 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-brand-300">
+              <Sparkles size={16} /> Features
+            </h4>
+            <ul className="mt-3 space-y-2">
               {features?.map((feature, index) => (
-                <p key={index} className="text-lg">{feature}</p>
+                <li key={index} className="flex gap-2 text-slate-300">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-400" />
+                  {feature}
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
-          <div className="space-y-2">
-            <h4 className="font-semibold text-xl text-indigo-600">Benefits:</h4>
-            <div className="pl-5 text-gray-800 space-y-2">
+          <div>
+            <h4 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-accent-400">
+              <Trophy size={16} /> Benefits
+            </h4>
+            <ul className="mt-3 space-y-2">
               {benefits?.map((benefit, index) => (
-                <p key={index} className="text-lg">{benefit}</p>
+                <li key={index} className="flex gap-2 text-slate-300">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-400" />
+                  {benefit}
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </div>
       </div>
@@ -101,33 +123,42 @@ function LanguageRecommendations({ skillLevel }) {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center justify-start px-4 py-10 overflow-auto">
+    <section className="page">
       {showCompiler ? (
         <Compiler />
       ) : (
-        <div className="w-full flex flex-col items-center">
-          {/* Recommended Languages */}
-          <div className="p-6 bg-white shadow-2xl rounded-2xl text-center w-full max-w-md transform transition duration-300 hover:scale-105 mb-8">
-            <h2 className="text-3xl font-extrabold text-gray-800 mb-4">Recommended Languages</h2>
-            <ul className="text-lg text-gray-700 space-y-3">{renderLanguageList()}</ul>
+        <div className="flex flex-col gap-8">
+          <div>
+            <span className="eyebrow">{skillLevel} track</span>
+            <h1 className="heading mt-4">Recommended languages</h1>
+            <p className="mt-2 muted">Pick a language to see a curated playlist and why it is worth learning.</p>
           </div>
 
-          {/* Start Coding Button Positioned Between Sections */}
-          <button
-            className="my-6 px-6 py-3 bg-indigo-600 text-white text-xl rounded-md hover:bg-indigo-700 transition duration-300"
-            onClick={handleStartCoding}
-          >
-            Start Coding
-          </button>
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,22rem)_1fr]">
+            <div className="flex flex-col gap-6">
+              <div className="card p-5">
+                <ul className="space-y-3">{renderLanguageList()}</ul>
+              </div>
 
-          {/* Playlist Suggestions appear above Features and Benefits */}
-          {selectedLanguage && <VideoSuggestions language={selectedLanguage} />}
+              <button className="btn-primary w-full py-3 text-base" onClick={handleStartCoding}>
+                <Code2 size={18} /> Start Coding
+              </button>
+            </div>
 
-          {/* Features and Benefits at the last */}
-          {selectedLanguage && renderLanguageInfo(selectedLanguage)}
+            {selectedLanguage ? (
+              <div className="flex flex-col gap-6">
+                <VideoSuggestions language={selectedLanguage} />
+                {renderLanguageInfo(selectedLanguage)}
+              </div>
+            ) : (
+              <div className="card flex min-h-64 items-center justify-center border-dashed p-8 text-center muted">
+                Select a language on the left to explore its features and benefits.
+              </div>
+            )}
+          </div>
         </div>
       )}
-    </div>
+    </section>
   );
 }
 

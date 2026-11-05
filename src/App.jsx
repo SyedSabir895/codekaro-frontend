@@ -12,9 +12,9 @@ import Games from "./components/Games";
 
 function App() {
   return (
-    <div className="min-h-screen flex flex-col space-y-3">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      <div className="flex-1 bg-blue-500 flex flex-col items-center justify-center text-center w-full pt-16">
+      <main className="flex-1 flex flex-col items-center w-full pt-16">
         <Routes>
           <Route path="/" element={<SkillLevelSelector />} />
           <Route
@@ -45,12 +45,12 @@ function App() {
           <Route path="/create-account" element={<AuthPage/>}/>
           <Route path="/dashboard" element={<DashBoard/>}/>
           <Route path="/about" element={<AboutUs/>}/>
-          <Route path="/compiler" element={<Compiler/>}/>
+          <Route path="/compiler" element={<section className="page"><Compiler/></section>}/>
           <Route path="/blog" element={<Blog/>}/>
           <Route path="/games" element={<Games/>}/>
 
         </Routes>
-      </div>
+      </main>
     </div>
   );
 }

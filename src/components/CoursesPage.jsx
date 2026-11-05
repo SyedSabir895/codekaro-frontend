@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { PlayCircle, Download, Film } from "lucide-react";
 
 // Example courses with links for each skill level
 const courses = {
@@ -55,6 +56,12 @@ const courses = {
   ]
 };
 
+const sections = [
+  { key: "beginner", title: "Beginner", tone: "text-emerald-300" },
+  { key: "intermediate", title: "Intermediate", tone: "text-brand-300" },
+  { key: "expert", title: "Expert", tone: "text-rose-300" }
+];
+
 function CoursesPage() {
   const [showVideo, setShowVideo] = useState(false);
   const [startTime, setStartTime] = useState(null);
@@ -92,118 +99,80 @@ function CoursesPage() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-r] px-4 py-10">
-      <div className="flex flex-col items-center justify-start space-y-12">
-        
-        {/* Beginner Courses - Horizontal Layout */}
-        <div className="w-full flex flex-wrap justify-center gap-8">
-          <h2 className="text-3xl font-extrabold text-gray-800 mb-8 w-full text-center">Beginner Courses</h2>
-          {courses.beginner.map((course) => (
-            <div key={course.title} className="p-6 bg-white shadow-2xl rounded-2xl text-center w-72 transform transition duration-300 hover:scale-105">
-              <h3 className="font-semibold mb-4">{course.title}</h3>
-              <a
-                href={course.watchLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600 block mb-2"
-                onClick={() => handleCourseClick(course)}
-              >
-                Watch Video
-              </a>
-              <a
-                href={course.downloadLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-green-500 text-white py-2 px-6 rounded-md hover:bg-green-600 block"
-              >
-                Download Video (paste the link of the watch video)
-              </a>
+    <section className="page">
+      <span className="eyebrow">Courses</span>
+      <h1 className="heading mt-4">Curated video courses</h1>
+      <p className="mt-2 muted">Hand-picked free courses for every stage of your journey.</p>
+
+      <div className="mt-12 space-y-14">
+        {sections.map((section) => (
+          <div key={section.key}>
+            <div className="mb-5 flex items-baseline justify-between border-b border-white/10 pb-3">
+              <h2 className="text-xl font-bold text-white">
+                <span className={section.tone}>{section.title}</span> courses
+              </h2>
+              <span className="text-sm muted">{courses[section.key].length} courses</span>
             </div>
-          ))}
-        </div>
-
-        {/* Intermediate Courses - Horizontal Layout */}
-        <div className="w-full flex flex-wrap justify-center gap-8">
-          <h2 className="text-3xl font-extrabold text-gray-800 mb-8 w-full text-center">Intermediate Courses</h2>
-          {courses.intermediate.map((course) => (
-            <div key={course.title} className="p-6 bg-white shadow-2xl rounded-2xl text-center w-72 transform transition duration-300 hover:scale-105">
-              <h3 className="font-semibold mb-4">{course.title}</h3>
-              <a
-                href={course.watchLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600 block mb-2"
-                onClick={() => handleCourseClick(course)}
-              >
-                Watch Video
-              </a>
-              <a
-                href={course.downloadLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-green-500 text-white py-2 px-6 rounded-md hover:bg-green-600 block"
-              >
-                Download Video (paste the link of the watch video)
-              </a>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {courses[section.key].map((course) => (
+                <div key={course.title} className="card card-hover flex flex-col p-5">
+                  <div className="flex h-28 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500/20 via-ink-800 to-accent-400/10">
+                    <PlayCircle size={36} className="text-white/70" />
+                  </div>
+                  <h3 className="mt-4 font-semibold text-white">{course.title}</h3>
+                  <div className="mt-auto flex flex-col gap-2 pt-5">
+                    <a
+                      href={course.watchLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-primary w-full"
+                      onClick={() => handleCourseClick(course)}
+                    >
+                      <PlayCircle size={16} /> Watch Video
+                    </a>
+                    <a
+                      href={course.downloadLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-ghost w-full"
+                      title="Paste the watch video link on the download page"
+                    >
+                      <Download size={16} /> Download
+                    </a>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-
-        {/* Expert Courses - Horizontal Layout */}
-        <div className="w-full flex flex-wrap justify-center gap-8">
-          <h2 className="text-3xl font-extrabold text-gray-800 mb-8 w-full text-center">Expert Courses</h2>
-          {courses.expert.map((course) => (
-            <div key={course.title} className="p-6 bg-white shadow-2xl rounded-2xl text-center w-72 transform transition duration-300 hover:scale-105">
-              <h3 className="font-semibold mb-4">{course.title}</h3>
-              <a
-                href={course.watchLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600 block mb-2"
-                onClick={() => handleCourseClick(course)}
-              >
-                Watch Video
-              </a>
-              <a
-                href={course.downloadLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-green-500 text-white py-2 px-6 rounded-md hover:bg-green-600 block"
-              >
-                Download Video (paste the link of the watch video)
-              </a>
-            </div>
-          ))}
-        </div>
-
-        {/* Button to Toggle Video */}
-        <div className="mt-10">
-          <button
-            onClick={toggleVideo}
-            className="bg-purple-600 text-white py-2 px-6 rounded-md hover:bg-purple-700 "
-          >
-            {showVideo ? "Hide Video" : "Show Video(for downloading the course)"}
-          </button>
-        </div>
-
-        {/* Video Section */}
-        {showVideo && (
-          <div className="mt-8 w-full flex justify-center">
-            <video
-              width="1600"
-              controls
-              src="src/assets/Screen Recording 2025-01-30 183011.mp4"
-              type="video/mp4"
-              className="rounded-lg shadow-lg"
-              onEnded={handleVideoEnd}
-            >
-              Your browser does not support the video tag.
-            </video>
           </div>
-        )}
-
+        ))}
       </div>
-    </div>
+
+      {/* Button to Toggle Video */}
+      <div className="mt-14 card flex flex-col items-start gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="font-semibold text-white">How to download a course</p>
+          <p className="text-sm muted">Watch a quick walkthrough of the download steps.</p>
+        </div>
+        <button onClick={toggleVideo} className="btn-ghost">
+          <Film size={16} /> {showVideo ? "Hide Video" : "Show Video"}
+        </button>
+      </div>
+
+      {/* Video Section */}
+      {showVideo && (
+        <div className="mt-6">
+          <video
+            controls
+            src="src/assets/Screen Recording 2025-01-30 183011.mp4"
+            type="video/mp4"
+            className="w-full rounded-2xl border border-white/10 shadow-2xl"
+            onEnded={handleVideoEnd}
+          >
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      )}
+    </section>
   );
 }
 

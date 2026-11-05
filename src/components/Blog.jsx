@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { CalendarDays, Trash2, PenLine } from "lucide-react";
 
 const Blog = () => {
   // Load posts from localStorage or use an empty array
@@ -18,7 +19,7 @@ const Blog = () => {
     const { name, value } = e.target;
     setNewPost({ ...newPost, [name]: value });
   };
-``
+
   const handleAddPost = () => {
     if (newPost.title && newPost.date && newPost.content) {
       const updatedPosts = [...posts, newPost];
@@ -33,53 +34,73 @@ const Blog = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 bg-blue-500">
-      <h2 className="text-4xl font-bold text-white mb-8">Blog</h2>
-      {posts.map((post, index) => (
-        <div key={index} className="mb-8 p-4 bg-white rounded shadow-md">
-          <h3 className="text-2xl font-semibold text-blue-500">{post.title}</h3>
-          <p className="text-gray-600">{post.date}</p>
-          <p className="text-gray-800 mt-4">{post.content}</p>
-          <button
-            onClick={() => handleDeletePost(index)}
-            className="mt-4 bg-red-500 text-white px-4 py-2 rounded cursor-pointer"
-          >
-            Delete
-          </button>
+    <section className="page">
+      <span className="eyebrow">Blog</span>
+      <h1 className="heading mt-4">Notes &amp; stories</h1>
+      <p className="mt-2 muted">Write about what you are learning. Posts are saved in your browser.</p>
+
+      <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_22rem]">
+        <div className="space-y-5">
+          {posts.length === 0 && (
+            <div className="card border-dashed p-10 text-center muted">No posts yet. Write your first one!</div>
+          )}
+          {posts.map((post, index) => (
+            <article key={index} className="card p-6">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="text-xl font-bold text-white">{post.title}</h3>
+                  <p className="mt-1 flex items-center gap-1.5 text-sm text-slate-500">
+                    <CalendarDays size={14} /> {post.date}
+                  </p>
+                </div>
+                <button
+                  onClick={() => handleDeletePost(index)}
+                  className="btn-danger px-3 py-2"
+                  aria-label="Delete post"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+              <p className="mt-4 whitespace-pre-line leading-relaxed text-slate-300">{post.content}</p>
+            </article>
+          ))}
         </div>
-      ))}
-      <div className="mt-10">
-        <h3 className="text-2xl font-semibold text-white mb-4">Add New Post</h3>
-        <input
-          type="text"
-          name="title"
-          value={newPost.title}
-          onChange={handleInputChange}
-          placeholder="Title"
-          className="p-2 border rounded mb-4 w-full"
-        />
-        <input
-          type="date"
-          name="date"
-          value={newPost.date}
-          onChange={handleInputChange}
-          className="p-2 border rounded mb-4 w-full"
-        />
-        <textarea
-          name="content"
-          value={newPost.content}
-          onChange={handleInputChange}
-          placeholder="Content"
-          className="p-2 border rounded mb-4 w-full"
-        />
-        <button
-          onClick={handleAddPost}
-          className="bg-white text-blue-500 px-4 py-2 rounded cursor-pointer"
-        >
-          Add Post
-        </button>
+
+        <div className="card h-fit p-6 lg:sticky lg:top-24">
+          <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
+            <PenLine size={18} className="text-brand-300" /> Add New Post
+          </h3>
+          <div className="mt-5 space-y-3">
+            <input
+              type="text"
+              name="title"
+              value={newPost.title}
+              onChange={handleInputChange}
+              placeholder="Title"
+              className="input"
+            />
+            <input
+              type="date"
+              name="date"
+              value={newPost.date}
+              onChange={handleInputChange}
+              className="input [color-scheme:dark]"
+            />
+            <textarea
+              name="content"
+              value={newPost.content}
+              onChange={handleInputChange}
+              placeholder="Content"
+              rows={6}
+              className="input resize-y"
+            />
+            <button onClick={handleAddPost} className="btn-primary w-full">
+              Add Post
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 

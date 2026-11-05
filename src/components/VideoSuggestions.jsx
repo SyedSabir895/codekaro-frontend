@@ -18,25 +18,28 @@ function VideoSuggestions({ language }) {
   const playlistUrl = playlists[language]; // Get playlist URL based on selected language
 
   return (
-    <div className="p-6 bg-white shadow-2xl rounded-2xl text-center w-full max-w-md transform transition duration-300 hover:scale-105 mb-8">
-      <h2 className="text-3xl font-extrabold text-gray-800 mb-4 ">
-        Recommended Playlist for {language}
-      </h2>
+    <div className="card flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400">
+          Recommended playlist
+        </h2>
+        <p className="mt-1 text-lg font-bold text-white">{language} crash course</p>
+      </div>
       {playlistUrl ? (
         <a
           href={playlistUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center space-x-2 bg-red-500 text-white font-semibold text-lg py-3 px-6 rounded-lg shadow-md transition duration-300 hover:bg-red-600 hover:shadow-xl"
+          className="btn shrink-0 bg-rose-500/90 text-white hover:bg-rose-500"
         >
-          <PlayCircle className="w-6 h-6" />
+          <PlayCircle className="h-5 w-5" />
           <span>Watch on YouTube</span>
         </a>
       ) : (
-        <p className="text-lg text-gray-500 hidden">No playlist available for this language.</p>
+        <p className="text-sm muted">No playlist available for this language yet.</p>
       )}
     </div>
   );
 }
 
-export default VideoSuggestions
+export default VideoSuggestions;
