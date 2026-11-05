@@ -1,15 +1,15 @@
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Menu, X, User, LayoutDashboard, LogOut, UserPlus } from "lucide-react"; // Icons for navbar
+import { Menu, X, User, LayoutDashboard, LogOut, LogIn, UserPlus } from "lucide-react"; // Icons for navbar
 import { signOut } from "firebase/auth";
 import { auth } from "../Firebase";
-import { clearSession } from "../api";
+import { clearSession, isLoggedIn } from "../api";
 
 const navLinks = [
   { to: "/", label: "Home" },
-  { to: "/courses", label: "Courses" },
+  { to: "/courses", label: "Courses", private: true },
   { to: "/blog", label: "Blog" },
-  { to: "/games", label: "Games" },
+  { to: "/games", label: "Games", private: true },
   { to: "/about", label: "About Us" },
 ];
 
@@ -23,8 +23,10 @@ function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [progress, setProgress] = useState(40); // Dummy progress (replace with actual progress)
   const [userName, setUserName] = useState(localStorage.getItem("userName") || ""); // Fetch stored user name
+  const [loggedIn, setLoggedIn] = useState(isLoggedIn());
   const navigate = useNavigate();
   const location = useLocation();
+  const visibleLinks = navLinks.filter((link) => loggedIn || !link.private);
 
   // Fetch user data from localStorage when component mounts
   useEffect(() => {
@@ -41,6 +43,7 @@ function Navbar() {
     setIsDropdownOpen(false);
     setIsOpen(false);
     setUserName(localStorage.getItem("userName") || "");
+    setLoggedIn(isLoggedIn());
   }, [location.pathname]);
 
   // Logout Function
@@ -48,6 +51,7 @@ function Navbar() {
     clearSession();
     signOut(auth).catch(() => {}); // also end the Firebase (Google) session
     setUserName("");
+    setLoggedIn(false);
     navigate("/"); // Redirect to home
   };
 
@@ -61,7 +65,7 @@ function Navbar() {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-1">
-          {navLinks.map((link) => (
+          {visibleLinks.map((link) => (
             <NavLink key={link.to} to={link.to} end className={linkClass}>
               {link.label}
             </NavLink>
@@ -76,22 +80,31 @@ function Navbar() {
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-accent-400 text-white">
-                {userName ? userName.charAt(0).toUpperCase() : <User size={16} />}
+                {loggedIn && userName ? userName.charAt(0).toUpperCase() : <User size={16} />}
               </span>
-              <span className="hidden sm:block max-w-28 truncate">{userName || "Account"}</span>
+              <span className="hidden sm:block max-w-28 truncate">{(loggedIn && userName) || "Account"}</span>
             </button>
 
             {/* Dropdown Menu */}
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-60 rounded-2xl border border-white/10 bg-ink-900/95 p-2 shadow-2xl shadow-black/40 backdrop-blur-xl">
-                {!userName ? (
-                  <button
-                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-slate-200 hover:bg-white/5"
-                    onClick={() => navigate("/create-account")}
-                  >
-                    <UserPlus size={16} className="text-brand-300" />
-                    Create Account
-                  </button>
+                {!loggedIn ? (
+                  <>
+                    <button
+                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-slate-200 hover:bg-white/5"
+                      onClick={() => navigate("/create-account")}
+                    >
+                      <UserPlus size={16} className="text-brand-300" />
+                      Create Account
+                    </button>
+                    <button
+                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-slate-200 hover:bg-white/5"
+                      onClick={() => navigate("/create-account", { state: { mode: "login" } })}
+                    >
+                      <LogIn size={16} className="text-brand-300" />
+                      Log in
+                    </button>
+                  </>
                 ) : (
                   <>
                     <button
@@ -142,7 +155,7 @@ function Navbar() {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden flex flex-col gap-1 border-t border-white/10 px-4 py-3">
-          {navLinks.map((link) => (
+          {visibleLinks.map((link) => (
             <NavLink key={link.to} to={link.to} end className={linkClass}>
               {link.label}
             </NavLink>

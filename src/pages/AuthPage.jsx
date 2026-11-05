@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import api, { saveSession } from "../api";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../Firebase";
 import { Code2, Infinity as InfinityIcon, Gamepad2, UserRound, Bot } from "lucide-react";
@@ -14,7 +14,10 @@ const perks = [
 ];
 
 const AuthPage = () => {
-  const [isRegister, setIsRegister] = useState(true);
+  const location = useLocation();
+  // Return to the page that required login, or open on the Log in tab when asked
+  const destination = location.state?.from || "/";
+  const [isRegister, setIsRegister] = useState(location.state?.mode !== "login");
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -54,7 +57,7 @@ const AuthPage = () => {
         saveSession(response.data);
         setUserName(response.data.user.fullName);
         alert(response.data.message);
-        navigate("/");
+        navigate(destination, { replace: true });
       }
     } catch (error) {
       setError(error.response?.data?.message || "Something went wrong");
@@ -72,7 +75,7 @@ const AuthPage = () => {
 
       saveSession(response.data);
       setUserName(response.data.user.fullName);
-      navigate("/");
+      navigate(destination, { replace: true });
     } catch (err) {
       console.error("Google login error:", err);
       setError(`Google login failed: ${err.response?.data?.message || err.code || err.message}`);
